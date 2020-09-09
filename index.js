@@ -123,7 +123,50 @@ app.get('/items', (req, res) => {
 	})
 })
 
+//patch walaupun data undifined tapi tetap bisa melakukan update field yg dipilih
 app.patch('/items/patch/update/:id', (req, res) => {
+	let id = req.params.id
+
+	let {name, price, description} = req.body
+
+	id = parseInt(id)
+	price = parseInt(price)
+
+	let sql = `UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${id}`
+
+	db.query(sql, (err, result, fields) => {
+
+		console.log(result)
+
+		let cek = result.affectedRows
+
+		if (cek > 0) {
+			if (!err) {
+				res.send({
+					success: true,
+					message: "Data has been updated"
+				})
+			} else {
+				res.send({
+					success: false,
+					message: "Fail to update"
+				})
+				console.log(err)
+			}
+		} else {
+			res.send({
+				success: false,
+				message: "Data not found"
+			})
+		}
+
+		
+	})
+
+})
+
+//put kalau ada 1 field yang tidak diisi maka data tidak mau diupdate
+app.put('/items/put/update/:id', (req, res) => {
 	let id = req.params.id
 
 	let {name, price, description} = req.body
@@ -195,9 +238,17 @@ app.delete('/items/:id', (req, res) => {
 
 	let sql = `DELETE FROM items WHERE id=${id}`
 	db.query(sql, (err, result, fields) => {
-		if (!err) {
-			console.log(`ID ${id} telah dihapus`)
-			res.send("Berhasil dihapus")
+
+		let cek = result.affectedRows
+		if (cek > 0) {
+			if (!err) {
+				console.log(`ID ${id} deleted`)
+				res.send("Delete success")
+			} else {
+
+			}
+		} else {
+			res.send("ID not found")
 		}
 	})
 })
