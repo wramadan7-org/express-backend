@@ -107,7 +107,7 @@ app.get('/items', (req, res) => {
 
 				
 			} else {
-					res.send({
+				res.send({
 					success: true,
 					message: 'Data kosong',
 					data: result,
@@ -123,8 +123,45 @@ app.get('/items', (req, res) => {
 	})
 })
 
-app.get('/items/patch/update/:id', (req, res) => {
-	let {id, name, price, description} = req.params
+app.patch('/items/patch/update/:id', (req, res) => {
+	let id = req.params.id
+
+	let {name, price, description} = req.body
+
+	id = parseInt(id)
+	price = parseInt(price)
+
+	let sql = `UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${id}`
+
+	db.query(sql, (err, result, fields) => {
+
+		console.log(result)
+
+		let cek = result.affectedRows
+
+		if (cek > 0) {
+			if (!err) {
+				res.send({
+					success: true,
+					message: "Data has been updated"
+				})
+			} else {
+				res.send({
+					success: false,
+					message: "Fail to update"
+				})
+				console.log(err)
+			}
+		} else {
+			res.send({
+				success: false,
+				message: "Data not found"
+			})
+		}
+
+		
+	})
+
 })
 
 app.get('/items/detail/:id', (req, res) => {
