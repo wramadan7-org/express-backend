@@ -123,6 +123,10 @@ app.get('/items', (req, res) => {
 	})
 })
 
+app.get('/items/patch/update/:id', (req, res) => {
+	let {id, name, price, description} = req.params
+})
+
 app.get('/items/detail/:id', (req, res) => {
 	let id = req.params.id
 
@@ -147,7 +151,7 @@ app.get('/items/detail/:id', (req, res) => {
 	})
 })
 
-app.get('/items/delete/:id', (req, res) => {
+app.delete('/items/:id', (req, res) => {
 	let id = req.params.id
 
 	id = parseInt(id)
