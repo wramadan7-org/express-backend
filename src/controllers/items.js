@@ -85,7 +85,12 @@ module.exports = {
 					prevLink: null
 				}
 				res.send({
-					
+					success: true,
+					message: 'Success',
+					data: {
+						result,
+						pageInfo
+					}
 				})
 
 			}
