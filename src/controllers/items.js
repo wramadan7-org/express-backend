@@ -1,6 +1,6 @@
 const db = require('../helpers/db') //ambil db
 const qs = require('querystring')
-const {createItemModel, getItemModel, getAllItemModel, deleteItemModel} = require('../models/items')
+const {createItemModel, getItemModel, getAllItemModel, updatePutItemModel, updatePatchItemModel, deleteItemModel} = require('../models/items')
 
 module.exports = {
 
@@ -45,6 +45,7 @@ module.exports = {
 		// })
 	},
 
+	//Kurang pageInfo
 	getAllItems: (req, res) => {
 
 		let {page, limit, search} = req.query
@@ -74,25 +75,30 @@ module.exports = {
 		//kenapa di parseInt, karena inpuan bersifat string jadi jika ingin mengamil nomor, harus di ganti dgn tipedata number
 		const offset = (page-1) * limit
 
-		getAllItemModel([searchKey, searchValue, limit, offset], result => {
-			if (result) {
-				const pageInfo = {
-					count: 0,
-					pages: 0,
-					currentPage: page,
-					limitPage: limit,
-					nextLink: null,
-					prevLink: null
-				}
+		getAllItemModel([searchKey, searchValue, limit, offset], result  => {
+			if (result.length) {
+				// const pageInfo = {
+				// 	count: 0,
+				// 	pages: 0,
+				// 	currentPage: page,
+				// 	limitPage: limit,
+				// 	nextLink: null,
+				// 	prevLink: null
+				// }
 				res.send({
 					success: true,
 					message: 'Success',
 					data: {
-						result,
-						pageInfo
+						result
+						// pageInfo
 					}
 				})
 
+			} else {
+				res.send({
+					success: false,
+					message: 'Data not found'
+				})
 			}
 		})
 
@@ -199,41 +205,71 @@ module.exports = {
 		id = parseInt(id)
 		price = parseInt(price)
 
-		let sql = `UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${id}`
-
-		db.query(sql, (err, result, fields) => {
-
-			console.log(result)
-
-			let cek = result.affectedRows
-
-			if (name, price, description) {
-				if (cek > 0) {
-					if (!err) {
+		if (name && price && description) {
+			updatePutItemModel([name, price, description, id], result => {
+					if (result) {
+						// console.log(result) // item yang diupdate
 						res.send({
 							success: true,
-							message: "Data has been updated",
-							data: {
-								...req.body
-							}
+							message: 'Data has been updated',
+							data: result
 						})
-					} else {
+					} 
+					else if (result === null) { //jika yg dicallback null, tampilkan itu
 						res.send({
 							success: false,
-							message: "Fail to update"
+							message: 'Id not found'
 						})
-						console.log(err)
 					}
-				} else {
-					res.send({
-						success: false,
-						message: "Data not found"
-					})
-				}
-			}
+					else {
+						res.status({
+							success: false,
+							message: 'Update fail'
+						})
+					}
+				})
+		} else {
+			res.send({
+				success: false,
+				message: 'Fill must be filled'
+			})
+		}
+
+		// let sql = `UPDATE items SET name = '${name}', price = ${price}, description = '${description}' WHERE id = ${id}`
+
+		// db.query(sql, (err, result, fields) => {
+
+		// 	console.log(result)
+
+		// 	let cek = result.affectedRows
+
+		// 	if (name, price, description) {
+		// 		if (cek > 0) {
+		// 			if (!err) {
+		// 				res.send({
+		// 					success: true,
+		// 					message: "Data has been updated",
+		// 					data: {
+		// 						...req.body
+		// 					}
+		// 				})
+		// 			} else {
+		// 				res.send({
+		// 					success: false,
+		// 					message: "Fail to update"
+		// 				})
+		// 				console.log(err)
+		// 			}
+		// 		} else {
+		// 			res.send({
+		// 				success: false,
+		// 				message: "Data not found"
+		// 			})
+		// 		}
+		// 	}
 
 
-		}) //belum
+		// }) //belum
 
 	},
 
@@ -242,39 +278,67 @@ module.exports = {
 		let {name='', price='', description=''} = req.body
 		id = parseInt(id)
 
+
+
 		if (name.trim() || price.trim() || description.trim()) {
-			let sql = `SELECT * FROM items WHERE id = ${id}`
-			db.query(sql, (err, result, fields) => {
-				if (result.length) {
-					const data = Object.entries(req.body).map(item => {
+			const data = Object.entries(req.body).map(item => {
 						return parseInt(item[1])>0? `${item[0]}=${item[1]}`:`${item[0]}='${item[1]}'`
 					})
-					let sql = `UPDATE items SET ${data} WHERE id = ${id}`
-					// console.log(sql)
-					db.query(sql, (err, result, fields) => {
-						console.log(result)
-						if (result.affectedRows) {
-							res.send({
-								success: true,
-								message: "Update succes",
-								data: {
-									...req.body
-								}
-							})
-						} else {
-							res.send({
-								success: false,
-								message: "Update fail"
-							})
-						}
-					})
-				} else {
-					res.send({
-						success: false,
-						message: "Data not found",
-					})
-				}
+			updatePatchItemModel([data, id], result => {
+				if (result) {
+						// console.log(result) // item yang diupdate
+						res.send({
+							success: true,
+							message: 'Data has been updated',
+							data: result
+						})
+					} 
+					else if (result === null) { //jika yg dicallback null, tampilkan itu
+						res.send({
+							success: false,
+							message: 'Id not found'
+						})
+					}
+					else {
+						res.status({
+							success: false,
+							message: 'Update fail'
+						})
+					}
 			})
+			// let sql = `SELECT * FROM items WHERE id = ${id}`
+			// db.query(sql, (err, result, fields) => {
+			// 	if (result.length) {
+			// 		//kurang paham
+					// const data = Object.entries(req.body).map(item => {
+					// 	return parseInt(item[1])>0? `${item[0]}=${item[1]}`:`${item[0]}='${item[1]}'`
+					// })
+			// 		let sql = `UPDATE items SET ${data} WHERE id = ${id}`
+			// 		// console.log(sql)
+			// 		db.query(sql, (err, result, fields) => {
+			// 			console.log(result)
+			// 			if (result.affectedRows) {
+			// 				res.send({
+			// 					success: true,
+			// 					message: "Update succes",
+			// 					data: {
+			// 						...req.body
+			// 					}
+			// 				})
+			// 			} else {
+			// 				res.send({
+			// 					success: false,
+			// 					message: "Update fail"
+			// 				})
+			// 			}
+			// 		})
+			// 	} else {
+			// 		res.send({
+			// 			success: false,
+			// 			message: "Data not found",
+			// 		})
+			// 	}
+			// })
 			
 		} else {
 			res.send({

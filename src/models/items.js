@@ -1,5 +1,5 @@
 const db = require('../helpers/db.js')
-const qs = require('querystring')
+// const qs = require('querystring')
 
 const table = 'items'
 
@@ -33,58 +33,72 @@ module.exports = {
 		db.query(sql, (err, result, field) => {
 			if (!err) {
 				callback(result)
-				const pageInfo = {
-					count: 0,
-					pages: 0,
-					currentPage: arr[0],
-					limitPage: arr[1],
-					nextLink: null,
-					prevLink: null
-				}
-				if (result.length) {
-					const sql = `SELECT COUNT (*) AS count FROM ${table} WHERE ${arr[0]} LIKE '%${arr[1]}%'`
-					// eslint-disable-next-line no-unused-vars
-					// console.log(sql)
-					db.query(sql, (err, result, field) => {
-					// callback(result)
-					const {count} = result[0]
-						// console.log(count)
-						pageInfo.count = count
-						pageInfo.pages = Math.ceil(count / arr[1])
+				// if (result.length) {
+				// 	const sql = `SELECT COUNT (*) AS count FROM ${table} WHERE ${arr[0]} LIKE '%${arr[1]}%'`
+				// 	// eslint-disable-next-line no-unused-vars
+				// 	// console.log(sql)
+				// 	// eslint-disable-next-line no-unused-vars
+				// 	db.query(sql, (err, result, field) => {
+				// 	// callback(result)
 
-						const {pages, currentPage} = pageInfo
-
-						if (currentPage < pages) {
-							pageInfo.nextLink = `http://localhost:8080/items?${qs.stringify({...req.query,...{page: page+1}})}`
-						}
-						if (currentPage > 1) {
-							pageInfo.prevLink = `http://localhost:8080/items?${qs.stringify({...req.query,...{page: page-1}})}`
-						}
-
-						console.log(result)
-
-					})
-				}
+				// 	})
+				// }
 				
 			} else {
-				console.log('Data not found')
+				console.log('Server error')
+			}
+		})
+	},
+
+	updatePutItemModel: (arr, callback) => {
+
+		let sql = `UPDATE ${table} SET name = '${arr[0]}', price = ${arr[1]}, description = '${arr[2]}' WHERE id = ${arr[3]}`
+		// eslint-disable-next-line no-unused-vars
+		db.query(sql, (err, result, field) => {
+			// console.log(result) //berisi affected rows
+			if (result.affectedRows > 0) {
+				let sql = `SELECT * FROM ${table} WHERE id = ${arr[3]}`
+				db.query(sql, (err, result, field) => {
+					if (!err) {
+						callback(result)
+					} else {
+						callback(err) //err ini berisi null
+					}
+				})
+			} else {
+				callback(err)
+			}
+		})
+	},
+
+	updatePatchItemModel: (arr, callback) => {
+
+
+		let sql = `UPDATE items SET ${arr[0]} WHERE id = ${arr[1]}`
+		db.query(sql, (err, result, fields) => {
+			if (result.affectedRows > 0) {
+				let sql = `SELECT * FROM items WHERE id = ${arr[1]}`
+				db.query(sql, (err, result, fields) => {
+					if (!err) {
+						callback(result)
+					} else {
+						callback(err)
+					}
+				})
+			} else {
+				callback(err)
 			}
 		})
 	},
 
 	deleteItemModel: (id, callback) => {
-		let sql = `SELECT * FROM ${table} WHERE id = ${id}`
+		let sql = `DELETE FROM ${table} WHERE id = ${id}`
 		// eslint-disable-next-line no-unused-vars
 		db.query(sql, (err, result, field) => {
-			if (result.length) {
-				let sql = `DELETE FROM ${table} WHERE id = ${id}`
-				// eslint-disable-next-line no-unused-vars
-				db.query(sql, (err, result, field) => {
-					callback(result)
-				})
-			} else {
-				console.log('Data not found')
+			if (!err) {
+				callback()
 			}
 		})
+		
 	}
 }
