@@ -1,10 +1,11 @@
-const { Router } = require('express');
+const { Router } = require('express')
 
+//ambil object yg ada di controller
 const {createdItem, getAllItems, getDetailItem, updatePutItem, updatePatchItem, deleteItem} = require('../controllers/items')
 
 const router = Router()
 
-
+//link ini akan digabungkan di index /items dan memanggil controller seuai link
 router.get('/', getAllItems)
 router.get('/detail/:id', getDetailItem)
 router.post('/', createdItem)

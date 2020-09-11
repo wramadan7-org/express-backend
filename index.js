@@ -10,11 +10,11 @@ const db = require('./src/helpers/db')
 
 const qs = require('querystring')
 
-const itemsRouter = require('./src/routes/items')
-
+const itemsRouter = require('./src/routes/items') //(.)titik satu untuk masuk folder, (..) untuk keluar folder
+//langsung panggil nama filenya, gausah .js
 
 app.use(bodyParser.urlencoded({extended: false}))
-app.use('/items', itemsRouter)
+app.use('/items', itemsRouter) //inisial link awal dengan /items kemudian link selanjutnya sudah ditentukan di routes
 
 // app.post('/items', )
 
