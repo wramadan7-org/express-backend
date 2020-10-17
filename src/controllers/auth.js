@@ -2,9 +2,11 @@ const { loginModel, registerCustomerModel, registerSellerModel } = require('../m
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const response = require('../helpers/respons')
+const Joi = require('joi')
 
 module.exports = {
     login: (req, res) => {
+
         const { email, password } = req.body
 
         loginModel([email, password], result => {

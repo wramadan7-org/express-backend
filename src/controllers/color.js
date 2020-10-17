@@ -1,5 +1,6 @@
 const { addColorModel, getColorModel, deleteColorModel } = require('../models/color')
 const response = require('../helpers/respons')
+const Joi = require('joi')
 
 module.exports = {
     addColor: (req, res) => {

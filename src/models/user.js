@@ -36,7 +36,7 @@ module.exports = {
 
     updatePutUserModel: (arr, callback) => {
         let sql = `UPDATE ${tableUsers} SET 
-        name = '${arr[1]}', email = '${arr[2]}', password = '${arr[3]}', phone = '${arr[4]}', gender = '${arr[5]}', date = '${arr[6]}', image = '$${arr[7]}' 
+        name = '${arr[1]}', email = '${arr[2]}', phone = '${arr[3]}', gender = '${arr[4]}', date = '${arr[5]}', image = '${arr[6]}' 
         WHERE id_user = ${arr[0]}`
         db.query(sql, (err, result, _field) => {
             if (result.affectedRows > 0) {

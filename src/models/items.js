@@ -23,7 +23,11 @@ module.exports = {
 	},
 
 	getItemModel: (id, callback) => {
-		let sql = `SELECT * FROM ${table} WHERE id_item = ${id}`
+		const sql = `SELECT ${table}.id_item, ${table2}.name_category AS category, ${table}.name AS name, ${table}.price, ${table3}.color, ${table4}.condition, ${table}.description, ${table}.picture, ${table}.created_at, ${table}.updated_at FROM (((${table} 
+							INNER JOIN ${table2} ON ${table}.id_category = ${table2}.id_category)
+							INNER JOIN ${table3} ON ${table}.id_color = ${table3}.id_color)
+							INNER JOIN ${table4} ON ${table}.id_condition = ${table4}.id_condition)
+							WHERE ${table}.id_item = ${id}`
 		// eslint-disable-next-line no-unused-vars
 		db.query(sql, (err, result, field) => {
 			// console.log(result) //data berdasarkan id

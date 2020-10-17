@@ -7,6 +7,7 @@ const {
 // const upload = require('../helpers/uploadProfile')
 const response = require('../helpers/respons')
 const bcrypte = require('bcrypt')
+const Joi = require('joi')
 
 module.exports = {
     getAllUser: (req, res) => {
@@ -31,16 +32,17 @@ module.exports = {
         })
     },
 
+    //password saya hapus
     updatePutByUser: (req, res) => {
-        const { name, email, password, phone, gender, date } = req.body
-        const image = req.file.filename
+        const { name, email, phone, gender, date } = req.body
+        const image = req.file ? req.file.filename : ''
         const encript = req.user.user
         const id_user = encript.id_user
-        const salt = bcrypte.genSaltSync(10)
-        const hash = bcrypte.hashSync(password, salt)
+        // const salt = bcrypte.genSaltSync(10)
+        // const hash = bcrypte.hashSync(password, salt)
 
-        if (name, email, password, phone, gender, date) {
-            updatePutUserModel([id_user, name, email, hash, phone, gender, date, image], result => {
+        if (name, email, phone, gender, date) {
+            updatePutUserModel([id_user, name, email, phone, gender, date, image], result => {
                 if (result) {
                     const data = { result }
                     return response(res, `Updated success`, data, true)
@@ -104,7 +106,7 @@ module.exports = {
     },
 
     createdUser: (req, res) => {
-        const { id_role, name, email, password, phone, gender, date } = req.body
+        const { id_role, name, email, password } = req.body
         const image = req.file.filename
         // console.log(image)
         const salt = bcrypte.genSaltSync(10)
@@ -114,7 +116,7 @@ module.exports = {
         const role = payload.id_role
 
         if (role == 1) {
-            createdUserModel([parseInt(id_role), name, email, hash, phone, gender, date, image], result => {
+            createdUserModel([parseInt(id_role), name, email, hash], result => {
                 if (result.affectedRows > 0) {
                     const data = {
                         ...req.body,

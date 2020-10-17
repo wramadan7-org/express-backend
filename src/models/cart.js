@@ -6,22 +6,22 @@ const table3 = 'items'
 
 module.exports = {
 	createCartModel: (arr, callback) => {
-		let sql = `SELECT * FROM ${table3} WHERE id_item = ${arr[1]}`
-		db.query(sql, (err, result, _field) => {
-			if (result.length) {
-				let sql = `INSERT INTO ${table1} (id_user, id_item, qty) VALUES (${arr[0]}, ${arr[1]}, ${arr[2]})`
-				// eslint-disable-next-line no-unused-vars
-				db.query(sql, (err, result, field) => {
-					if (!err) {
-						callback(result)
-					} else {
-						callback(err)
-					}
-				})
+		// let sql = `SELECT * FROM ${table3} WHERE id_item = ${arr[1]}`
+		// db.query(sql, (err, result, _field) => {
+		// if (result.length) {
+		let sql = `INSERT INTO ${table1} (id_user, id_item, qty) VALUES (${arr[0]}, ${arr[1]}, ${arr[2]})`
+		// eslint-disable-next-line no-unused-vars
+		db.query(sql, (err, result, field) => {
+			if (!err) {
+				callback(result)
 			} else {
 				callback(err)
 			}
 		})
+		// } else {
+		// 	callback(err)
+		// }
+		// })
 	},
 
 	//var.map(objct, index, array) => {}

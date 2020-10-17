@@ -1,6 +1,7 @@
 const response = require('../helpers/respons')
 const { payload } = require('../helpers/getPayload')
 const { createCartModel, readCartModel, deleteCartModel } = require('../models/cart')
+const Joi = require('joi')
 
 module.exports = {
 	createCart: (req, res) => {
