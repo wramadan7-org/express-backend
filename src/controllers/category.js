@@ -3,7 +3,7 @@ const { createdCategoryModel, readAllCategoryModel, readCategoryIdModel, readAll
 const { pageInfo } = require('../helpers/pageInfo')
 const response = require('../helpers/respons')
 const qs = require('querystring')
-const { payload } = require('../helpers/getPayload')
+// const { payload } = require('../helpers/getPayload')
 const Joi = require('joi')
 
 module.exports = {
@@ -15,9 +15,8 @@ module.exports = {
 		const mimetype = req.file.mimetype
 		const type = mimetype.split('/')
 		let data = {}
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 
 		// console.log(req.file)
 		if (role == 1) {
@@ -108,18 +107,8 @@ module.exports = {
 				data = { ...result[0] }
 				// console.log({ ...result[0] })
 				return response(res, `Data with Id ${id}`, { data }, true)
-				// console.log(result)
-				// res.send({
-				// 	success: true,
-				// 	message: `Data with Id ${id}`,
-				// 	data: result[0]
-				// })
 			} else {
 				return response(res, 'Data not found', '', false)
-				// res.send({
-				// 	success: false,
-				// 	message: 'Data not found'
-				// })
 			}
 		})
 	},
@@ -144,19 +133,8 @@ module.exports = {
 			// console.log(result)
 			if (result) {
 				return response(res, 'All data by category name', { result }, true)
-				// res.send({
-				// 	success: true,
-				// 	message: 'You can see all data',
-				// 	data: {
-				// 		result
-				// 	}
-				// })
 			} else {
 				return response(res, 'Wrong key', '', false)
-				// res.send({
-				// 	success: false,
-				// 	message: 'Wrong key'
-				// })
 			}
 		})
 	},
@@ -190,26 +168,11 @@ module.exports = {
 						...req.file
 					}
 					return response(res, `Data ${id} has been updated`, { data }, true)
-					// res.send({
-					// 	success: true,
-					// 	message: `Data ${id} has been updated`,
-					// 	data: {
-					// 		...req.body
-					// 	}
-					// })
 				} else if (result === null) {
 					return response(res, 'Data not found', '', false)
-					// res.send({
-					// 	success: false,
-					// 	message: `Data not found`
-					// })
 				}
 				else {
 					return response(res, 'Fail updated')
-					// res.send({
-					// 	success: false,
-					// 	message: `Fail update`
-					// })
 				}
 
 			})
@@ -218,10 +181,6 @@ module.exports = {
 			// }
 		} else {
 			return response(res, 'Fill the column')
-			// res.send({
-			// 	success: false,
-			// 	message: `Fill the column`
-			// })
 		}
 	},
 
@@ -234,9 +193,8 @@ module.exports = {
 		const type = mimetype.split('/')
 		const { id } = req.params
 		let data = {}
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 
 		let date = new Date()
 		let year = date.getFullYear()
@@ -280,9 +238,8 @@ module.exports = {
 		const { id } = req.params
 		// console.log(id)
 		let data = {}
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 
 		if (role == 1) {
 			deleteCategoryModel(id, result => {

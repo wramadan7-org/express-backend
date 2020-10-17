@@ -1,5 +1,5 @@
 const response = require('../helpers/respons')
-const { payload } = require('../helpers/getPayload')
+// const { payload } = require('../helpers/getPayload')
 const { createCartModel, readCartModel, deleteCartModel } = require('../models/cart')
 const Joi = require('joi')
 
@@ -12,7 +12,6 @@ module.exports = {
 		// const id_user = pay.user.id_user
 
 		const encript = req.user.user
-		const role = encript.role
 		const id_user = encript.id_user
 
 		if (parseInt(id_item), parseInt(qty)) {

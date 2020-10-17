@@ -1,7 +1,7 @@
 const qs = require('querystring')
 const { createItemModel, getItemModel, getAllItemModel, updatePutItemModel, updatePatchItemModel, deleteItemModel } = require('../models/items')
 const response = require('../helpers/respons')
-const { payload } = require('../helpers/getPayload')
+// const { payload } = require('../helpers/getPayload')
 const { off } = require('process')
 const Joi = require('joi')
 
@@ -93,9 +93,8 @@ module.exports = {
 		const size = req.file.size
 		const mimetype = req.file.mimetype
 		const type = mimetype.split('/')
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 		let data = {}
 		if (name && price && description && id_category && picture && id_condition) {
 			if (role == 1) {
@@ -135,9 +134,9 @@ module.exports = {
 		id = parseInt(id)
 		id_category = parseInt(id_category)
 		price = parseInt(price)
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
+		const id_user = encript.id_user
 
 		if (role == 1) {
 			if (name && price && description && id_category && id_color && id_condition) {
@@ -180,9 +179,8 @@ module.exports = {
 		let id = req.params
 		let { name = '', price = '', description = '', id_category = '' } = req.body
 		id = parseInt(id)
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 
 		if (role == 1) {
 			if (name.trim() || price.trim() || description.trim() || id_category.trim()) {
@@ -212,9 +210,8 @@ module.exports = {
 
 	deleteItem: (req, res) => {
 		let { id } = req.params
-		const { authorization } = req.headers
-		const pay = payload(authorization)
-		const role = pay.user.id_role
+		const encript = req.user.user
+		const role = encript.id_role
 
 		if (role == 1) {
 			deleteItemModel(id, result => {

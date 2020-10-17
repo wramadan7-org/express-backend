@@ -1,6 +1,6 @@
 const { loginModel, registerCustomerModel, registerSellerModel } = require('../models/auth')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const response = require('../helpers/respons')
 const Joi = require('joi')
 

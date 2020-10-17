@@ -135,9 +135,6 @@ module.exports = {
 
     addAddress: (req, res) => {
         const { homeAddress, recepientsName, recepientsNumber, address, postalCode, city } = req.body
-        // const { authorization } = req.headers
-        // const pay = payload(authorization)
-        // const userId = pay.user.id_user
         const encript = req.user.user
         const id_user = encript.id_user
         addAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city], result => {
