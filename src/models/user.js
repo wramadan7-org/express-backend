@@ -70,6 +70,42 @@ module.exports = {
         })
     },
 
+    updatePatchByUserModel: (arr, callback) => {
+        let sql = `SELECT * FROM ${tableUsers} WHERE id_user = ${arr[0]}`
+        db.query(sql, (err, result, _field) => {
+            if (result.length) {
+                let sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', email = '${arr[2]}', date = '${arr[3]}', password = '${arr[4]}', image = '${arr[5]}' WHERE id_user = ${arr[0]}`
+                db.query(sql, (err, result, _field) => {
+                    if (result) {
+                        callback(result)
+                    } else {
+                        callback(err)
+                    }
+                })
+            } else {
+                callback(err)
+            }
+        })
+    },
+
+    updatePatchByUserMobileModel: (arr, callback) => {
+        let sql = `SELECT * FROM ${tableUsers} WHERE id_user = ${arr[0]}`
+        db.query(sql, (err, result, _field) => {
+            if (result.length) {
+                let sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', date = '${arr[3]}' WHERE id_user = ${arr[0]}`
+                db.query(sql, (err, result, _field) => {
+                    if (result) {
+                        callback(result)
+                    } else {
+                        callback(err)
+                    }
+                })
+            } else {
+                callback(err)
+            }
+        })
+    },
+
     createdUserModel: (arr, callback) => {
         let sql = `INSERT INTO ${tableUsers} (id_role, name, email, password, phone, gender, date) VALUES (${arr[0]}, '${arr[1]}', '${arr[2]}', '${arr[3]}', '${arr[4]}', '${arr[5]}', '${arr[6]}' )`
         db.query(sql, (err, result, _field) => {

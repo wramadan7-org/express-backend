@@ -89,36 +89,52 @@ module.exports = {
 
 	createdItem: (req, res) => {
 		const { name, price, description, id_category, id_color, id_condition } = req.body
-		const picture = req.file.filename
-		const size = req.file.size
-		const mimetype = req.file.mimetype
-		const type = mimetype.split('/')
 		const encript = req.user.user
 		const role = encript.id_role
 		let data = {}
-		if (name && price && description && id_category && picture && id_condition) {
-			if (role == 1) {
-				if (size < 500000 && type[0] == 'image') {
-					createItemModel([name, price, description, id_category, picture, id_color, id_condition], result => {
-						// console.log(picture)
-						if (result.affectedRows > 0) {
-							data = {
-								...req.body,
-								...req.file
+		try {
+			if (name && price && description && id_category && id_condition) {
+				if (role == 1) {
+					if (req.file === undefined) {
+						const picture = ''
+						createItemModel([name, price, description, id_category, picture, id_color, id_condition], result => {
+							if (result.affectedRows > 0) {
+								data = {
+									...req.body,
+									picture
+								}
 							}
-							return response(res, `Items has been created`, { data }, true)
-						} else {
-							return response(res, `Fail to create item`, '', false)
-						}
-					})
+						})
+					} else {
+						const picture = `http://localhost:8080/uploads/${req.file.filename}`
+						// const size = req.file.size
+						// const mimetype = req.file.mimetype
+						// const type = mimetype.split('/')
+						// if (size < 500000 && type[0] == 'image') {
+							createItemModel([name, price, description, id_category, picture, id_color, id_condition], result => {
+								// console.log(picture)
+								if (result.affectedRows > 0) {
+									data = {
+										...req.body,
+										picture
+									}
+									return response(res, `Items has been created`, { data }, true)
+								} else {
+									return response(res, `Fail to create item`, '', false)
+								}
+							})
+						// } else {
+						// 	return response(res, `File must be image and image < 500KB`, '', false)
+						// }
+					}
 				} else {
-					return response(res, `File must be image and image < 500KB`, '', false)
+					return response(res, 'You are not admin', '', false)
 				}
 			} else {
-				return response(res, 'You are not admin', '', false)
+				return response(res, `Fill all column!`, '', false)
 			}
-		} else {
-			return response(res, `Fill all column!`, '', false)
+		} catch (err) {
+			return response(res, `${err}`, '', false)
 		}
 	},
 

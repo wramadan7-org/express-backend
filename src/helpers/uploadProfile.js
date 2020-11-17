@@ -2,14 +2,19 @@ const multer = require('multer')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        let originalName = file.originalname
-        let type = originalName.split('.')
-        if (type[1] == 'jpg' || type[1] == 'png') {
-            cb(null, 'assets/profile/')
+            cb(null, 'assets/profile')
+    },
+    filename: (req, file, cb) => {
+        const {name} = req.body
+        const ext = file.originalname.split('.')[file.originalname.split('.').length - 1] // ambil type file (jpg/png)
+        //  console.log('sassas', [file.originalname.split('.').length])
+        if (ext === 'jpg' || ext === 'png') {
+            const filename = new Date().getTime().toString().concat(name.split(' ').join('-')).concat('.').concat(ext)
+            cb(null, filename)
         } else {
             cb(new Error, '')
         }
     }
 })
 
-module.exports = multer({ storage })
+module.exports = multer({ storage }).single('photo')

@@ -23,7 +23,7 @@ const customerRouter = require('./src/routes/customer/customer')
 // const checkout = require('./src/routes/checkout')
 
 //langsung panggil nama filenya, gausah .js
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 //import middleware
 const tokenAuth = require('./src/middlewares/auth')
@@ -41,6 +41,14 @@ app.use('/customer', tokenAuth, customerRouter)
 
 app.use('/login', loginRouter)
 app.use('/register', registerRouter)
+
+app.use('/uploads', express.static('assets/profile'))
+app.use('/uploads', express.static('assets/uploads'))
+/* 
+	saya ingin memanggil gambar maka routenya harus diawali dengan /uploads
+	karena mengguakan static maka gambar bisa ditambiplkan di web menjadi dengan cara sebagai berikut:
+	http://localhost/8080/uploads(ini route kita buat diatas)/nama_file.jpg(kita ambil dari folder atau file mana(assets/profile) atau (assets/uploads))
+**/
 
 
 app.listen(port, () => {

@@ -1,13 +1,13 @@
 const {
     createdUserModel, getUserModel, getAllUserModel, getUserByIdModel, updatePatchUserModel,
     updatePutUserModel, addAddressModel, getAddressModel, updatePutAddressModel,
-    deleteAddressModel
+    deleteAddressModel, updatePatchByUserModel
 } = require('../models/user')
 
 // const upload = require('../helpers/uploadProfile')
 const response = require('../helpers/respons')
 const bcrypte = require('bcrypt')
-const Joi = require('joi')
+const joi = require('joi')
 
 module.exports = {
     getAllUser: (req, res) => {
@@ -52,6 +52,140 @@ module.exports = {
             })
         } else {
             return response(res, 'Fill all column', '', false)
+        }
+    },
+
+    updatePatchByUser: (req, res) => {
+        try {
+            const schema = joi.object({
+                name: joi.string().required(),
+                email: joi.string().email().required(),
+                birthdate: joi.string(),
+                password: joi.string().required()
+            })
+            const {value, error} = schema.validate(req.body)
+            const {name, email, birthdate, password} = value
+            const {id_user} = req.user.user
+            const salt = bcrypte.genSaltSync(10)
+            const hash = bcrypte.hashSync(password, salt)
+            if (error) {
+                return response(res, `${error}`, '', false)
+            } else {
+                if (req.file === undefined) {
+                   const photo = ''
+                   getUserModel(id_user, checkUser => {
+                       if (checkUser.length) {
+                            updatePatchByUserModel([id_user, name, email, birthdate, hash, photo], result => {
+                                if (result.affectedRows > 0) {
+                                    getUserModel(id_user, getResult => {
+                                        if (getResult.length) {
+                                            // console.log(getResult)
+                                            const data = {
+                                                ...getResult[0]
+                                            }
+                                            return response(res, 'Edit success', {data}, true)
+                                        } else {
+                                            return response(res, 'Fail to edit', '', false)
+                                        }
+                                    })
+                                } else {
+                                    return response(res, 'Fail to edit', '', false)
+                                }
+                            })
+                       } else {
+                           return response(res, 'User not found', '', false)
+                       }
+                   })
+                } else {
+                    const photo = `http://localhost:8080/uploads/${req.file.filename}`
+                    getUserModel(id_user, checkUser => {
+                        if (checkUser.length) {
+                            updatePatchByUserModel([id_user, name, email, birthdate, hash, photo], result => {
+                                if (result.affectedRows > 0) {
+                                    getUserModel(id_user, getResult => {
+                                        if (getResult.length) {
+                                            // console.log(getResult)
+                                            const data = {
+                                                ...getResult[0]
+                                            }
+                                            return response(res, 'Edit success', {data}, true)
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            return response(res, 'User not found', '', false)
+                        }
+                    })
+                }
+            }
+        } catch (err) {
+            return response(res, `${err}`, '', false)
+        }
+    },
+
+    UpdatePatchUserMobile: (req, res) => {
+        try {
+            const schema = joi.object({
+                name: joi.string().required(),
+                birthdate: joi.string(),
+            })
+            const {value, error} = schema.validate(req.body)
+            const {name, birthdate} = value
+            const {id_user} = req.user.user
+            if (error) {
+                return response(res, `${error}`, '', false)
+            } else {
+                // if (req.file === undefined) {
+                //    const photo = ''
+                   getUserModel(id_user, checkUser => {
+                       if (checkUser.length) {
+                            updatePatchByUserMobileModel([id_user, name, birthdate], result => {
+                                if (result.affectedRows > 0) {
+                                    getUserModel(id_user, getResult => {
+                                        if (getResult.length) {
+                                            // console.log(getResult)
+                                            const data = {
+                                                ...getResult[0]
+                                            }
+                                            return response(res, 'Edit success', {data}, true)
+                                        } else {
+                                            return response(res, 'Fail to edit', '', false)
+                                        }
+                                    })
+                                } else {
+                                    return response(res, 'Fail to edit', '', false)
+                                }
+                            })
+                       } else {
+                           return response(res, 'User not found', '', false)
+                       }
+                   })
+                // } else {
+                //     const photo = `http://localhost:8080/uploads/${req.file.filename}`
+                //     getUserModel(id_user, checkUser => {
+                //         if (checkUser.length) {
+                //             updatePatchByUserModel([id_user, name, email, birthdate, hash, photo], result => {
+                //                 if (result.affectedRows > 0) {
+                //                     getUserModel(id_user, getResult => {
+                //                         if (getResult.length) {
+                //                             // console.log(getResult)
+                //                             const data = {
+                //                                 ...getResult[0]
+                //                             }
+                //                             return response(res, 'Edit success', {data}, true)
+                //                         }
+                //                     })
+                //                 }
+                //             })
+                //         } else {
+                //             return response(res, 'User not found', '', false)
+                //         }
+                //     })
+                // }
+            }
+        } catch (err) {
+            return response(res, `${err}`, '', false)
         }
     },
 

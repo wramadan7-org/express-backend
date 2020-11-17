@@ -10,7 +10,7 @@ const router = Router()
 
 router.get('/', getAllUser)
 router.get('/detail/:id', getUserById)
-router.post('/', uploadProfile.single('image'), createdUser)
+router.post('/', uploadProfile, createdUser)
 router.patch('/patch/:id', updatePatch)
 router.put('/put/:id', updatePut)
 router.post('/address', addAddress)

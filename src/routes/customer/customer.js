@@ -6,7 +6,10 @@ const uploadProfile = require('../../helpers/uploadProfile')
 const { getAllItems, getDetailItem } = require('../../controllers/items')
 const { readAllCategory, readCategoryId, readAllCategoryJoin } = require('../../controllers/category')
 const { createCart, readCart, deleteCart } = require('../../controllers/cart')
-const { getUser, updatePutByUser, getAddress, addAddress, updatePutAddress, deleteAddress } = require('../../controllers/user')
+const { 
+   getUser, updatePutByUser, updatePatchByUser, UpdatePatchUserMobile,
+   getAddress, addAddress, updatePutAddress, deleteAddress 
+} = require('../../controllers/user')
 const { getTransaction } = require('../../controllers/transaction')
 
 router.get('/product', getAllItems)
@@ -18,11 +21,16 @@ router.get('/cart', readCart)
 router.post('/cart', createCart)
 router.delete('/cart/:id', deleteCart)
 router.get('/profile', getUser)
-router.put('/profile', uploadProfile.single('image'), updatePutByUser)
+router.put('/profile', uploadProfile, updatePutByUser)
+router.patch('/profile', uploadProfile,updatePatchByUser)
 router.get('/address', getAddress)
 router.post('/address', addAddress)
 router.put('/address/:id', updatePutAddress)
 router.delete('/address/:id', deleteAddress)
 router.get('/transaction', getTransaction)
+
+// mobile
+router.patch('/mobile/profile', uploadProfile, UpdatePatchUserMobile)
+
 
 module.exports = router
