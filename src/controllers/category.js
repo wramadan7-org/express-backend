@@ -27,7 +27,6 @@ module.exports = {
               ...req.body,
               picture
             }
-            // console.log(result)
             return response(res, 'Data has been insert', { data }, true)
           } else {
             return response(res, 'Fail insert', '', false)
