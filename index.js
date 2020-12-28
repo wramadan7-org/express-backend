@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 
 const app = express()
@@ -47,6 +48,13 @@ saya ingin memanggil gambar maka routenya harus diawali dengan /uploads
 karena mengguakan static maka gambar bisa ditambiplkan di web menjadi dengan cara sebagai berikut:
 http://localhost/8080/uploads(ini route kita buat diatas)/nama_file.jpg(kita ambil dari folder atau file mana(assets/profile) atau (assets/uploads))
 **/
+
+app.get('/', (req, res) => {
+  res.send({
+    success: true,
+    message: 'Backend Ecommerce is running well'
+  })
+})
 
 app.listen(APP_PORT, () => {
   console.log(`Port sedang berjalan ${APP_PORT}`)
