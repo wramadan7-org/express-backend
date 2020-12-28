@@ -1,11 +1,10 @@
 const express = require('express')
+require('dotenv').config()
 
 const app = express()
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
-const port = 8080
 
 // const authRouter = require('./src/routes/auth')
 const itemsRouter = require('./src/routes/items') // (.)titik satu untuk masuk folder, (..) untuk keluar folder
@@ -49,6 +48,6 @@ karena mengguakan static maka gambar bisa ditambiplkan di web menjadi dengan car
 http://localhost/8080/uploads(ini route kita buat diatas)/nama_file.jpg(kita ambil dari folder atau file mana(assets/profile) atau (assets/uploads))
 **/
 
-app.listen(port, () => {
+app.listen(process.env.APP_PORT, () => {
   console.log('Port sedang berjalan')
 })
