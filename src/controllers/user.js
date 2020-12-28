@@ -1,9 +1,21 @@
 
 /* eslint-disable camelcase */
 const {
-  createdUserModel, getUserModel, getAllUserModel, getUserByIdModel, updatePatchUserModel,
-  updatePutUserModel, addAddressModel, getAddressModel, updatePutAddressModel,
-  deleteAddressModel, updatePatchByUserModel, updatePatchUserPhotoModel, changePasswordModel, updatePatchByUserMobileModel
+  createdUserModel,
+  getUserModel,
+  getAllUserModel,
+  getUserByIdModel,
+  updatePatchUserModel,
+  updatePutUserModel,
+  addAddressModel,
+  getAddressModel,
+  updatePutAddressModel,
+  deleteAddressModel,
+  updatePatchByUserModel,
+  updatePatchUserPhotoModel,
+  changePasswordModel,
+  updatePatchByUserMobileModel,
+  updatePatchByUserPhotoModel
 } = require('../models/user')
 
 // const upload = require('../helpers/uploadProfile')
@@ -94,8 +106,7 @@ module.exports = {
         if (req.file === undefined) {
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
-              const photo = checkUser[0].image
-              updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
+              updatePatchByUserModel([id_user, name, email, birthdate, gender, phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
                     if (getResult.length) {
@@ -120,7 +131,7 @@ module.exports = {
           const photo = `uploads/${req.file.filename}`
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
-              updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
+              updatePatchByUserPhotoModel([id_user, name, email, birthdate, photo, gender, phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
                     if (getResult.length) {

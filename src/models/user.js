@@ -86,6 +86,24 @@ module.exports = {
     const sql = `SELECT * FROM ${tableUsers} WHERE id_user = ${arr[0]}`
     db.query(sql, (err, result, _field) => {
       if (result.length) {
+        const sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', email = '${arr[2]}', date = '${arr[3]}', gender = '${arr[4]}', phone = '${arr[5]}' WHERE id_user = ${arr[0]}`
+        db.query(sql, (err, result, _field) => {
+          if (result) {
+            callback(result)
+          } else {
+            callback(err)
+          }
+        })
+      } else {
+        callback(err)
+      }
+    })
+  },
+
+  updatePatchByUserPhotoModel: (arr, callback) => {
+    const sql = `SELECT * FROM ${tableUsers} WHERE id_user = ${arr[0]}`
+    db.query(sql, (err, result, _field) => {
+      if (result.length) {
         const sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', email = '${arr[2]}', date = '${arr[3]}', image = '${arr[4]}', gender = '${arr[5]}', phone = '${arr[6]}' WHERE id_user = ${arr[0]}`
         db.query(sql, (err, result, _field) => {
           if (result) {
