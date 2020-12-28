@@ -47,7 +47,7 @@ module.exports = {
     const salt = bcrypt.genSaltSync(10)
     const hashPassword = bcrypt.hashSync(password, salt)
     // console.log(hashPassword)
-    if (id_role && name && email && password) {
+    if (name && email && password) {
       registerCustomerModel([id_role, name, email, hashPassword], result => {
         // console.log(result)
         if (result) {
@@ -77,6 +77,10 @@ module.exports = {
       registerSellerModel([id_role, name, email, hashPassword, phone, gender, date], result => {
         // console.log(result)
         if (result) {
+          const data = {
+            ...req.body,
+            password: hashPassword
+          }
           return response(res, 'register success', { data }, true)
         } else {
           return response(res, 'Email is already registered', '', false)
