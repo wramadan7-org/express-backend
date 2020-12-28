@@ -120,6 +120,22 @@ module.exports = {
           const photo = `uploads/${req.file.filename}`
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
+              if (checkUser[0].image.length > 0) {
+                const photo = checkUser[0].image
+                updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
+                  if (result.affectedRows > 0) {
+                    getUserModel(id_user, getResult => {
+                      if (getResult.length) {
+                        // console.log(getResult)
+                        const data = {
+                          ...getResult[0]
+                        }
+                        return response(res, 'Edit success', { data }, true)
+                      }
+                    })
+                  }
+                })
+              }
               updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
