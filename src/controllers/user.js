@@ -76,18 +76,18 @@ module.exports = {
   updatePatchByUser: (req, res) => {
     try {
       const schema = joi.object({
-        name: joi.string().required(),
-        email: joi.string().email().required(),
+        name: joi.string(),
+        email: joi.string().email(),
         birthdate: joi.string(),
-        password: joi.string().required(),
+        // password: joi.string(),
         gender: joi.string(),
         phone: joi.string()
       })
       const { value, error } = schema.validate(req.body)
-      const { name, email, birthdate, password, gender, phone } = value
+      const { name, email, birthdate, gender, phone } = value
       const { id_user } = req.user.user
-      const salt = bcrypte.genSaltSync(10)
-      const hash = bcrypte.hashSync(password, salt)
+      // const salt = bcrypte.genSaltSync(10)
+      // const hash = bcrypte.hashSync(password, salt)
       if (error) {
         return response(res, `${error}`, '', false)
       } else {
@@ -95,7 +95,7 @@ module.exports = {
           const photo = ''
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
-              updatePatchByUserModel([id_user, name, email, birthdate, hash, photo, gender, phone], result => {
+              updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
                     if (getResult.length) {
@@ -120,7 +120,7 @@ module.exports = {
           const photo = `uploads/${req.file.filename}`
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
-              updatePatchByUserModel([id_user, name, email, birthdate, hash, photo, gender, phone], result => {
+              updatePatchByUserModel([id_user, name, email, birthdate, photo, gender, phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
                     if (getResult.length) {
@@ -244,7 +244,7 @@ module.exports = {
           }
         })
       } else {
-        const photo = `http://localhost:8080/uploads/${req.file.filename}`
+        const photo = `uploads/${req.file.filename}`
         getUserModel(id_user, checkUser => {
           if (checkUser.length) {
             updatePatchUserPhotoModel([id_user, photo, name], result => {

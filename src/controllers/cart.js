@@ -42,26 +42,23 @@ module.exports = {
     const id_user = encript.id_user
 
     readCartModel(id_user, (result, tot) => {
-      const results = result.map(res => {
-        // // console.log(res.qty, res.price)
-        const data = {
-          id: res.id,
-          id_user: res.id_user,
-          name: res.name,
-          item: res.item,
-          picture: res.picture,
-          qty: res.qty,
-          price: res.qty * res.price
-        }
-        return data
-      })
-      // console.log()
-      // return response(res, 'All your cart', { results }, true)
-
       if (result.length) {
+        const results = result.map(res => {
+          // // console.log(res.qty, res.price)
+          const data = {
+            id: res.id,
+            id_user: res.id_user,
+            name: res.name,
+            item: res.item,
+            picture: res.picture,
+            qty: res.qty,
+            price: res.qty * res.price
+          }
+          return data
+        })
         return response(res, 'All your cart', { results, ...tot }, true)
       } else {
-        return response(res, 'You dont have cart', '', false)
+        return response(res, `${result}`, '', false)
       }
     })
   },

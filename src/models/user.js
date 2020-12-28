@@ -86,7 +86,7 @@ module.exports = {
     const sql = `SELECT * FROM ${tableUsers} WHERE id_user = ${arr[0]}`
     db.query(sql, (err, result, _field) => {
       if (result.length) {
-        const sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', email = '${arr[2]}', date = '${arr[3]}', password = '${arr[4]}', image = '${arr[5]}', gender = '${arr[6]}', phone = '${arr[7]}' WHERE id_user = ${arr[0]}`
+        const sql = `UPDATE ${tableUsers} SET name = '${arr[1]}', email = '${arr[2]}', date = '${arr[3]}', image = '${arr[4]}', gender = '${arr[5]}', phone = '${arr[6]}' WHERE id_user = ${arr[0]}`
         db.query(sql, (err, result, _field) => {
           if (result) {
             callback(result)
