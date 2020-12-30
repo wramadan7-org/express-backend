@@ -9,6 +9,7 @@ const {
   updatePutUserModel,
   addAddressModel,
   getAddressModel,
+  getAddressByParamsModel,
   updatePutAddressModel,
   deleteAddressModel,
   updatePatchByUserModel,
@@ -408,23 +409,26 @@ module.exports = {
   },
 
   addAddress: (req, res) => {
-    const { homeAddress, recepientsName, recepientsNumber, address, postalCode, city } = req.body
-    const encript = req.user.user
-    const id_user = encript.id_user
-    addAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city], result => {
+    try {
+      const { homeAddress, recepientsName, recepientsNumber, address, postalCode, city } = req.body
+      const encript = req.user.user
+      const id_user = encript.id_user
+      addAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city], result => {
       // console.log(result)
-      const data = { ...req.body }
-      if (result.affectedRows > 0) {
-        return response(res, 'Your address success added', { data }, true)
-      } else {
-        return response(res, 'Fail to add', '', false)
-      }
-    })
+        const data = { ...req.body }
+        if (result.affectedRows > 0) {
+          return response(res, 'Your address success added', { data }, true)
+        } else {
+          return response(res, 'Fail to add', '', false)
+        }
+      })
+    } catch (err) {
+      return response(res, `Catch: ${err}`, '', false)
+    }
   },
 
   getAddress: (req, res) => {
-    const encript = req.user.user
-    const id_user = encript.id_user
+    const { id_user } = req.user.user
     getAddressModel(id_user, result => {
       if (result.length) {
         return response(res, 'Your address', { result }, true)
@@ -434,37 +438,61 @@ module.exports = {
     })
   },
 
-  updatePutAddress: (req, res) => {
-    const { homeAddress, recepientsName, recepientsNumber, address, postalCode, city } = req.body
-    const { id } = req.params
-    const encript = req.user.user
-    const id_user = encript.id_user
-    if (homeAddress, recepientsName, recepientsNumber, address, postalCode, city) {
-      updatePutAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city, id], result => {
-        if (result !== null && result.affectedRows > 0) {
-          const data = { ...req.body }
-          // console.log(data)
-          return response(res, 'Your address has been updated', { data }, true)
+  addressByParams: (req, res) => {
+    try {
+      const { id_user } = req.user.user
+      const { id } = req.params
+      getAddressByParamsModel(id_user, id, results => {
+        if (results.length > 0) {
+          return response(res, `Address with id ${id}`, { results }, true)
         } else {
-          return response(res, 'Fail to update address, please fill in correctly', '', false)
+          return response(res, 'Not found', '', false)
         }
       })
-    } else {
-      return response(res, 'Fill all column', '', false)
+    } catch (err) {
+      return response(res, `Catch: ${err}`, '', false)
+    }
+  },
+
+  updatePutAddress: (req, res) => {
+    try {
+      const { homeAddress, recepientsName, recepientsNumber, address, postalCode, city } = req.body
+      const { id } = req.params
+      const encript = req.user.user
+      const id_user = encript.id_user
+      if (homeAddress, recepientsName, recepientsNumber, address, postalCode, city) {
+        updatePutAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city, id], result => {
+          if (result !== null && result.affectedRows > 0) {
+            const data = { ...req.body }
+            // console.log(data)
+            return response(res, 'Your address has been updated', { data }, true)
+          } else {
+            return response(res, 'Fail to update address, please fill in correctly', '', false)
+          }
+        })
+      } else {
+        return response(res, 'Fill all column', '', false)
+      }
+    } catch (err) {
+      return response(res, `Catch: ${err}`, '', false)
     }
   },
 
   deleteAddress: (req, res) => {
-    const { id } = req.params
-    const encript = req.user.user
-    const id_user = encript.id_user
+    try {
+      const { id } = req.params
+      const encript = req.user.user
+      const id_user = encript.id_user
 
-    deleteAddressModel([id, id_user], result => {
-      if (result) {
-        return response(res, 'Your address has been deleted', '', true)
-      } else {
-        return response(res, 'Your address fail to update', '', false)
-      }
-    })
+      deleteAddressModel([id, id_user], result => {
+        if (result) {
+          return response(res, 'Your address has been deleted', '', true)
+        } else {
+          return response(res, 'Your address fail to update', '', false)
+        }
+      })
+    } catch (err) {
+      return response(res, `Catch: ${err}`, '', false)
+    }
   }
 }

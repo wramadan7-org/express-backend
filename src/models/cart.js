@@ -7,9 +7,6 @@ const table3 = 'items'
 
 module.exports = {
   createCartModel: (arr, callback) => {
-    // let sql = `SELECT * FROM ${table3} WHERE id_item = ${arr[1]}`
-    // db.query(sql, (err, result, _field) => {
-    // if (result.length) {
     const sql = `INSERT INTO ${table1} (id_user, id_item, qty) VALUES (${arr[0]}, ${arr[1]}, ${arr[2]})`
     // eslint-disable-next-line no-unused-vars
     db.query(sql, (err, result, field) => {
@@ -19,16 +16,12 @@ module.exports = {
         callback(err)
       }
     })
-    // } else {
-    // callback(err)
-    // }
-    // })
   },
 
   // var.map(objct, index, array) => {}
 
   readCartModel: (id, callback) => {
-    const sql = `SELECT SUM(${table3}.price) AS total FROM ((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item) WHERE ${table1}.id_user = ${id}`
+    const sql = `SELECT SUM(${table3}.price * ${table1}.qty) AS total FROM ((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item) WHERE ${table1}.id_user = ${id}`
     db.query(sql, (err, result, _field) => {
       if (result.length) {
         const total = result[0]

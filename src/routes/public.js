@@ -5,6 +5,7 @@ const router = Router()
 
 router.get('/items', getAllItems)
 router.get('/items/:id', getDetailItem)
+
 router.get('/category', readAllCategory)
 router.get('/category/:id', readCategoryId)
 router.get('/category/detail/:id', readAllCategoryJoin)

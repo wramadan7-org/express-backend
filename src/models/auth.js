@@ -17,7 +17,7 @@ module.exports = {
   registerCustomerModel: (arr, callback) => {
     const sql = `SELECT * FROM users WHERE email = '${arr[2]}'`
     db.query(sql, (err, result, field) => {
-      // console.log(result.length)
+      console.log(result.length)
       if (result <= 0) {
         const sql = `INSERT INTO users (id_role, name, email, password) VALUES (${arr[0]}, '${arr[1]}', '${arr[2]}', '${arr[3]}')`
         db.query(sql, (err, result, _field) => {

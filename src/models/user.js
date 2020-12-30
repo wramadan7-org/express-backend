@@ -179,6 +179,17 @@ module.exports = {
     })
   },
 
+  getAddressByParamsModel: (user, params, callback) => {
+    const sql = `SELECT * FROM ${tableAddress} WHERE id_user = ${user} AND id_address = ${params}`
+    db.query(sql, (err, result, field) => {
+      if (result) {
+        callback(result)
+      } else {
+        callback(err)
+      }
+    })
+  },
+
   updatePutAddressModel: (arr, callback) => {
     const sql = `SELECT * FROM ${tableAddress} WHERE id_user = ${arr[0]} AND id_address = ${arr[7]}`
     db.query(sql, (err, result, _field) => {
