@@ -7,6 +7,12 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const { APP_PORT } = process.env
 
+// langsung panggil nama filenya, gausah .js
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cors())
+// import middleware
+const tokenAuth = require('./src/middlewares/auth')
+
 // const authRouter = require('./src/routes/auth')
 const itemsRouter = require('./src/routes/items') // (.)titik satu untuk masuk folder, (..) untuk keluar folder
 const categoryRouter = require('./src/routes/category')
@@ -20,12 +26,6 @@ const registerRouter = require('./src/routes/register')
 const publicRouter = require('./src/routes/public')
 const customerRouter = require('./src/routes/customer/customer')
 // const checkout = require('./src/routes/checkout')
-
-// langsung panggil nama filenya, gausah .js
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cors())
-// import middleware
-const tokenAuth = require('./src/middlewares/auth')
 // console.log(tokenAuth())
 
 // app.use('/auth', authRouter)
