@@ -159,12 +159,6 @@ module.exports = {
   updatePutItem: (req, res) => {
     let { id } = req.params
 
-    // let { name, price, description, id_category, id_color, id_condition } = req.body
-    const picture = req.file.filename
-    const size = req.file.size
-    const mimetype = req.file.mimetype
-    const type = mimetype.split('/')
-
     const schema = joi.object({
       name: joi.string(),
       price: joi.number(),
@@ -181,53 +175,52 @@ module.exports = {
     price = parseInt(price)
     const encript = req.user.user
     const role = encript.id_role
-    const id_user = encript.id_user
 
     if (error) {
       return response(res, `Schema: ${error}`, '', false)
     } else {
       try {
         if (role === 1) {
-          if (name && price && description && id_category && id_color && id_condition) {
-            if (size < 500000 && type[0] === 'image') {
-              const date = new Date()
-              const year = date.getFullYear()
-              const month = date.getMonth()
-              const dat = date.getDate()
-              const hour = date.getHours()
-              const min = date.getMinutes()
-              const sec = date.getSeconds()
-              const dateNow = `${year}-${month}-${dat} ${hour}:${min}:${sec}`
-              // console.log(s)
-              // console.log(date)
-              if (req.file === undefined) {
-                updatePitItemWithoutPicture([name, price, description, id, id_category, dateNow, id_color, id_condition], result => {
-                  if (result) {
-                    // console.log(result) // item yang diupdate
-                    return response(res, 'Data has been updated', { result }, true)
-                  } else if (result === null) { // jika yg dicallback null, tampilkan itu
-                    return response(res, `Id ${id} not found`, '', false)
-                  } else {
-                    return response(res, 'Updated fail', '', false)
-                  }
-                })
+          const date = new Date()
+          const year = date.getFullYear()
+          const month = date.getMonth()
+          const dat = date.getDate()
+          const hour = date.getHours()
+          const min = date.getMinutes()
+          const sec = date.getSeconds()
+          const dateNow = `${year}-${month}-${dat} ${hour}:${min}:${sec}`
+          // console.log(s)
+          // console.log(date)
+          if (req.file === undefined) {
+            updatePitItemWithoutPicture([name, price, description, id, id_category, dateNow, id_color, id_condition], result => {
+              if (result) {
+                // console.log(result) // item yang diupdate
+                return response(res, 'Data has been updated', { result }, true)
+              } else if (result === null) { // jika yg dicallback null, tampilkan itu
+                return response(res, `Id ${id} not found`, '', false)
               } else {
-                updatePutItemModel([name, price, description, id, id_category, picture, dateNow, id_color, id_condition], result => {
-                  if (result) {
-                    // console.log(result) // item yang diupdate
-                    return response(res, 'Data has been updated', { result }, true)
-                  } else if (result === null) { // jika yg dicallback null, tampilkan itu
-                    return response(res, `Id ${id} not found`, '', false)
-                  } else {
-                    return response(res, 'Updated fail', '', false)
-                  }
-                })
+                return response(res, 'Updated fail', '', false)
               }
+            })
+          } else {
+            const picture = `uploads/${req.file.filename}`
+            const size = req.file.size
+            const mimetype = req.file.mimetype
+            const type = mimetype.split('/')
+            if (size < 500000 && type[0] === 'image') {
+              updatePutItemModel([name, price, description, id, id_category, picture, dateNow, id_color, id_condition], result => {
+                if (result) {
+                  // console.log(result) // item yang diupdate
+                  return response(res, 'Data has been updated', { result }, true)
+                } else if (result === null) { // jika yg dicallback null, tampilkan itu
+                  return response(res, `Id ${id} not found`, '', false)
+                } else {
+                  return response(res, 'Updated fail', '', false)
+                }
+              })
             } else {
               return response(res, 'File must be image and image < 500KB')
             }
-          } else {
-            return response(res, 'Fill all column', '', false)
           }
         } else {
           return response(res, 'You are not admin', '', false)

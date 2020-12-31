@@ -103,7 +103,7 @@ module.exports = {
 		WHERE id_item = ${arr[3]}`
     // eslint-disable-next-line no-unused-vars
     db.query(sql, (err, result, field) => {
-      // console.log(result) //berisi affected rows
+      console.log(result) // berisi affected rows
       if (result.affectedRows > 0) {
         const sql = `SELECT * FROM ${table} WHERE id_item = ${arr[3]}`
         // eslint-disable-next-line no-unused-vars
