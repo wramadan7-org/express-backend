@@ -74,6 +74,29 @@ module.exports = {
     })
   },
 
+  updatePitItemWithoutPicture: (arr, callback) => {
+    const sql = `UPDATE ${table} SET
+		name = '${arr[0]}', price = ${arr[1]}, description = '${arr[2]}', id_category = ${arr[4]}, updated_at = '${arr[5]}', id_color = ${arr[6]}, id_condition = ${arr[7]} 
+		WHERE id_item = ${arr[3]}`
+    // eslint-disable-next-line no-unused-vars
+    db.query(sql, (err, result, field) => {
+      // console.log(result) //berisi affected rows
+      if (result.affectedRows > 0) {
+        const sql = `SELECT * FROM ${table} WHERE id_item = ${arr[3]}`
+        // eslint-disable-next-line no-unused-vars
+        db.query(sql, (err, result, field) => {
+          if (!err) {
+            callback(result)
+          } else {
+            callback(err) // err ini berisi null
+          }
+        })
+      } else {
+        callback(err)
+      }
+    })
+  },
+
   updatePutItemModel: (arr, callback) => {
     const sql = `UPDATE ${table} SET
 		name = '${arr[0]}', price = ${arr[1]}, description = '${arr[2]}', id_category = ${arr[4]}, picture = '${arr[5]}', updated_at = '${arr[6]}', id_color = ${arr[7]}, id_condition = ${arr[8]} 

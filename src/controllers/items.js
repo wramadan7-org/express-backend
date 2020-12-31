@@ -1,7 +1,15 @@
 /* eslint-disable camelcase */
 require('dotenv').config()
 const qs = require('querystring')
-const { createItemModel, getItemModel, getAllItemModel, updatePutItemModel, updatePatchItemModel, deleteItemModel } = require('../models/items')
+const {
+  createItemModel,
+  getItemModel,
+  getAllItemModel,
+  updatePutItemModel,
+  updatePitItemWithoutPicture,
+  updatePatchItemModel,
+  deleteItemModel
+} = require('../models/items')
 const response = require('../helpers/respons')
 // const { payload } = require('../helpers/getPayload')
 const joi = require('joi')
@@ -192,16 +200,29 @@ module.exports = {
               const dateNow = `${year}-${month}-${dat} ${hour}:${min}:${sec}`
               // console.log(s)
               // console.log(date)
-              updatePutItemModel([name, price, description, id, id_category, picture, dateNow, id_color, id_condition], result => {
-                if (result) {
-                  // console.log(result) // item yang diupdate
-                  return response(res, 'Data has been updated', { result }, true)
-                } else if (result === null) { // jika yg dicallback null, tampilkan itu
-                  return response(res, `Id ${id} not found`, '', false)
-                } else {
-                  return response(res, 'Updated fail', '', false)
-                }
-              })
+              if (req.file === undefined) {
+                updatePitItemWithoutPicture([name, price, description, id, id_category, dateNow, id_color, id_condition], result => {
+                  if (result) {
+                    // console.log(result) // item yang diupdate
+                    return response(res, 'Data has been updated', { result }, true)
+                  } else if (result === null) { // jika yg dicallback null, tampilkan itu
+                    return response(res, `Id ${id} not found`, '', false)
+                  } else {
+                    return response(res, 'Updated fail', '', false)
+                  }
+                })
+              } else {
+                updatePutItemModel([name, price, description, id, id_category, picture, dateNow, id_color, id_condition], result => {
+                  if (result) {
+                    // console.log(result) // item yang diupdate
+                    return response(res, 'Data has been updated', { result }, true)
+                  } else if (result === null) { // jika yg dicallback null, tampilkan itu
+                    return response(res, `Id ${id} not found`, '', false)
+                  } else {
+                    return response(res, 'Updated fail', '', false)
+                  }
+                })
+              }
             } else {
               return response(res, 'File must be image and image < 500KB')
             }
