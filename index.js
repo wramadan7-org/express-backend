@@ -5,11 +5,13 @@ const app = express()
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const morgan = require('morgan')
 const { APP_PORT } = process.env
 
 // langsung panggil nama filenya, gausah .js
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
+app.use(morgan('dev'))
 // import middleware
 const tokenAuth = require('./src/middlewares/auth')
 
