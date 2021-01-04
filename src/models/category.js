@@ -54,7 +54,7 @@ module.exports = {
   },
 
   readAllCategoryJoinModel: (arr, callback) => {
-    const sql = `SELECT  ${table}.id_category, ${table2}.id_item, ${table2}.name, ${table}.name_category FROM ${table2} INNER JOIN ${table} ON ${table2}.id_category = ${table}.id_category WHERE ${table}.id_category = ${arr[2]}`
+    const sql = `SELECT  ${table}.id_category, ${table2}.id_item, ${table2}.name, ${table}.name_category as category, ${table2}.price, ${table2}.picture, ${table2}.description FROM ${table2} INNER JOIN ${table} ON ${table2}.id_category = ${table}.id_category WHERE ${table}.id_category = ${arr[2]}`
     // eslint-disable-next-line no-unused-vars
     db.query(sql, (_err, result, _field) => {
       const res = result.forEach(element => {

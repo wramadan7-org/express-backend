@@ -56,7 +56,8 @@ module.exports = {
             item: res.item,
             picture: res.picture,
             qty: res.qty,
-            price: res.qty * res.price
+            price: res.qty * res.price,
+            color: res.color
           }
           return data
         })

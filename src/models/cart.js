@@ -4,6 +4,7 @@ const db = require('../helpers/db')
 const table1 = 'carts'
 const table2 = 'users'
 const table3 = 'items'
+const table4 = 'product_colors'
 
 module.exports = {
   createCartModel: (arr, callback) => {
@@ -25,7 +26,7 @@ module.exports = {
     db.query(sql, (err, result, _field) => {
       if (result.length) {
         const total = result[0]
-        const sql = `SELECT ${table1}.id_cart AS id, ${table2}.id_user, ${table2}.name AS name, ${table3}.name AS item, ${table3}.picture AS picture, ${table1}.qty AS qty, ${table3}.price AS price FROM ((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item ) WHERE ${table1}.id_user = ${id} ORDER BY ${table1}.id_cart DESC`
+        const sql = `SELECT ${table1}.id_cart AS id, ${table2}.id_user, ${table2}.name AS name, ${table3}.name AS item, ${table3}.picture AS picture, ${table1}.qty AS qty, ${table3}.price AS price, ${table4}.color AS color FROM (((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item) INNER JOIN ${table4} ON ${table3}.id_color = ${table4}.id_color) WHERE ${table1}.id_user = ${id} ORDER BY ${table1}.id_cart DESC`
         db.query(sql, (err, result, _field) => {
           if (!err) {
             callback(result, total)
