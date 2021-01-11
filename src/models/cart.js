@@ -26,7 +26,7 @@ module.exports = {
     db.query(sql, (err, result, _field) => {
       if (result.length) {
         const total = result[0]
-        const sql = `SELECT ${table1}.id_cart AS id, ${table2}.id_user, ${table2}.name AS name, ${table3}.name AS item, ${table3}.picture AS picture, ${table1}.qty AS qty, ${table3}.price AS price, ${table4}.color AS color FROM (((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item) INNER JOIN ${table4} ON ${table3}.id_color = ${table4}.id_color) WHERE ${table1}.id_user = ${id} ORDER BY ${table1}.id_cart DESC`
+        const sql = `SELECT ${table1}.id_cart AS id, ${table2}.id_user, ${table2}.name AS name, ${table3}.id_item, ${table3}.name AS item, ${table3}.picture AS picture, ${table1}.qty AS qty, ${table3}.price AS price, ${table4}.color AS color FROM (((${table1} INNER JOIN ${table2} ON ${table1}.id_user = ${table2}.id_user) INNER JOIN ${table3} ON ${table1}.id_item = ${table3}.id_item) INNER JOIN ${table4} ON ${table3}.id_color = ${table4}.id_color) WHERE ${table1}.id_user = ${id} ORDER BY ${table1}.id_cart DESC`
         db.query(sql, (err, result, _field) => {
           if (!err) {
             callback(result, total)
@@ -34,6 +34,17 @@ module.exports = {
             callback(err)
           }
         })
+      }
+    })
+  },
+
+  deleteAllCartByUserModel: (arr, callback) => {
+    const sql = `DELETE FROM ${table1} WHERE id_user = ${arr[0]}`
+    db.query(sql, (err, result, _field) => {
+      if (result) {
+        callback(result)
+      } else {
+        callback(err)
       }
     })
   },

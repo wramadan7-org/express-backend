@@ -18,7 +18,7 @@ const {
   changePassword,
   addressByParams
 } = require('../../controllers/user')
-const { getTransaction } = require('../../controllers/transaction')
+const { getTransaction, addTransaction } = require('../../controllers/transaction')
 
 router.get('/cart', readCart)
 router.post('/cart', createCart)
@@ -36,6 +36,8 @@ router.put('/address/:id', updatePutAddress)
 router.delete('/address/:id', deleteAddress)
 
 router.get('/transaction', getTransaction)
+router.post('/transaction', addTransaction)
+
 router.patch('/changePassword', changePassword)
 
 // mobile

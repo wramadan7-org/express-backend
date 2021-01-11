@@ -19,7 +19,7 @@ module.exports = {
     db.query(sql, (err, result, field) => {
       console.log(result.length)
       if (result <= 0) {
-        const sql = `INSERT INTO users (id_role, name, email, password) VALUES (${arr[0]}, '${arr[1]}', '${arr[2]}', '${arr[3]}')`
+        const sql = `INSERT INTO users (id_role, name, email, password, phone, date, image) VALUES (${arr[0]}, '${arr[1]}', '${arr[2]}', '${arr[3]}', '', '2000-01-01', '')`
         db.query(sql, (err, result, _field) => {
           // console.log(result)
           if (result.affectedRows > 0) {
