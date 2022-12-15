@@ -120,6 +120,9 @@ module.exports = {
                     ...req.body,
                     picture
                   }
+                  return response(res, 'Items has been created', { data }, true)
+                } else {
+                  return response(res, 'Fail to create item', '', false)
                 }
               })
             } else {
