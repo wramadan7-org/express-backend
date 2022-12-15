@@ -75,6 +75,7 @@ module.exports = {
           nextLink: null,
           prevLink: null
         }
+        // eslint-disable-next-line no-unused-vars
         const { pages, currentPage, totalData } = pageInfo
 
         if (currentPage < pages) {
