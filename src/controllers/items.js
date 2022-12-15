@@ -50,7 +50,7 @@ module.exports = {
     }
 
     if (!limit) {
-      limit = 20
+      limit = 5
     } else {
       limit = parseInt(limit)
     }
@@ -82,7 +82,11 @@ module.exports = {
           pageInfo.nextLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page + 1 } })}`
         }
         if (currentPage >= pages) {
-          pageInfo.prevLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
+          if (page - 1 === 0) {
+            pageInfo.prevLink = null
+          } else {
+            pageInfo.prevLink = pageInfo.prevLink = `${process.env.APP_URL}items?${qs.stringify({ ...req.query, ...{ page: page - 1 } })}`
+          }
         }
 
         return response(res, 'All item', { result, pageInfo }, true)
