@@ -9,9 +9,9 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     const { id_user } = req.user.user
-    const ext = file.originalname.split('.')[file.originalname.split('.').length - 1] // ambil type file (jpg/png)
+    const ext = file.originalname.split('.')[file.originalname.split('.').length - 1] // ambil type file (jpg/jpeg/png)
     //  console.log('sassas', [file.originalname.split('.').length])
-    if (ext === 'jpg' || ext === 'png') {
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
       const filename = new Date().getTime().toString().concat(id_user).concat('.').concat(ext)
       cb(null, filename)
     } else {
