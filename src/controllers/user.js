@@ -36,7 +36,8 @@ module.exports = {
     const encript = req.user.user
     const id_user = encript.id_user
     getUserModel(id_user, result => {
-      if (result.length) {
+      console.log('controller', result)
+      if (result) {
         const data = {
           ...result[0]
         }
