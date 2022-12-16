@@ -108,7 +108,9 @@ module.exports = {
         if (req.file === undefined) {
           getUserModel(id_user, checkUser => {
             if (checkUser.length) {
-              updatePatchByUserModel([id_user, name, email, birthdate, gender, phone], result => {
+              const dateFromDB = checkUser[0].date
+              const dateFormater = `${dateFromDB.getFullYear()}-${dateFromDB.getMonth()}-${dateFromDB.getDate()}`
+              updatePatchByUserModel([id_user, name || checkUser[0].name, email || checkUser[0].email, birthdate || dateFormater, gender || checkUser[0].gender, phone || checkUser[0].phone], result => {
                 if (result.affectedRows > 0) {
                   getUserModel(id_user, getResult => {
                     if (getResult.length) {
@@ -370,6 +372,7 @@ module.exports = {
     const { id } = req.params
     if (name || email || password || phone || gender || date) {
       updatePatchUserModel([id, name, email, password, phone, gender, date], result => {
+        console.log(result)
         if (result.affectedRows > 0) {
           return response(res, 'Updated success', { ...req.body }, true)
         } else {
