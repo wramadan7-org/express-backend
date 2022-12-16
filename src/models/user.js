@@ -3,7 +3,6 @@
 const db = require('../helpers/db')
 const tableUsers = 'users'
 const tableRole = 'user_roles'
-const tableProfile = 'user_image'
 const tableAddress = 'user_address'
 
 module.exports = {
@@ -19,7 +18,11 @@ module.exports = {
   getUserModel: (id, callback) => {
     const sql = `SELECT ${tableUsers}.id_user, ${tableRole}.role, ${tableUsers}.name, ${tableUsers}.email, ${tableUsers}.password, ${tableUsers}.phone, ${tableUsers}.gender, ${tableUsers}.date, ${tableUsers}.image AS image, ${tableUsers}.created_at, ${tableUsers}.updated_at FROM ${tableRole} INNER JOIN ${tableUsers} ON ${tableRole}.id_role = ${tableUsers}.id_role WHERE ${tableUsers}.id_user = ${id}`
     db.query(sql, (err, result, _field) => {
-      callback(result)
+      if (result) {
+        callback(result)
+      } else {
+        callback(err)
+      }
     })
   },
 
@@ -139,16 +142,8 @@ module.exports = {
   createdUserModel: (arr, callback) => {
     const sql = `INSERT INTO ${tableUsers} (id_role, name, email, password, phone, gender, date) VALUES (${arr[0]}, '${arr[1]}', '${arr[2]}', '${arr[3]}', '${arr[4]}', '${arr[5]}', '${arr[6]}' )`
     db.query(sql, (err, result, _field) => {
-      if (result.affectedRows > 0) {
-        const resId = result.insertId
-        const sql = `INSERT INTO ${tableProfile} (id_user, image) VALUES (${resId}, '${arr[7]}')`
-        db.query(sql, (err, result, _field) => {
-          if (result) {
-            callback(result)
-          } else {
-            callback(err)
-          }
-        })
+      if (result) {
+        callback(result)
       } else {
         callback(err)
       }
