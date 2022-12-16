@@ -58,7 +58,7 @@ module.exports = {
 
     if (req.file === undefined) {
       const photo = ''
-      if (name, email, phone, gender, date) {
+      if (name || email || phone || gender || date) {
         updatePutUserModel([id_user, name, email, phone, gender, date, photo], result => {
           if (result) {
             const data = { result }
@@ -72,7 +72,7 @@ module.exports = {
       }
     } else {
       const photo = `uploads/${req.file.filename}`
-      if (name, email, phone, gender, date) {
+      if (name || email || phone || gender || date) {
         updatePutUserModel([id_user, name, email, phone, gender, date, photo], result => {
           if (result) {
             const data = { result }
@@ -351,7 +351,7 @@ module.exports = {
     // const salt = bcrypte.genSaltSync(10)
     // const hash = bcrypte.hashSync(password, salt)
 
-    if (name, email, password, phone, gender, date) {
+    if (name || email || password || phone || gender || date) {
       updatePutUserModel([id, name, email, password, phone, gender, date], result => {
         if (result) {
           const data = { result }
@@ -366,7 +366,7 @@ module.exports = {
   },
 
   updatePatch: (req, res) => {
-    const { name, email, password, phone, gender, date, s } = req.body
+    const { name, email, password, phone, gender, date } = req.body
     const { id } = req.params
     if (name || email || password || phone || gender || date) {
       updatePatchUserModel([id, name, email, password, phone, gender, date], result => {
@@ -391,7 +391,7 @@ module.exports = {
     const payload = req.user.user
     const role = payload.id_role
 
-    if (role == 1) {
+    if (role === 1) {
       createdUserModel([parseInt(id_role), name, email, hash], result => {
         if (result.affectedRows > 0) {
           const data = {
@@ -461,7 +461,7 @@ module.exports = {
       const { id } = req.params
       const encript = req.user.user
       const id_user = encript.id_user
-      if (homeAddress, recepientsName, recepientsNumber, address, postalCode, city) {
+      if (homeAddress || recepientsName || recepientsNumber || address || postalCode || city) {
         updatePutAddressModel([id_user, homeAddress, recepientsName, recepientsNumber, address, postalCode, city, id], result => {
           if (result !== null && result.affectedRows > 0) {
             const data = { ...req.body }
